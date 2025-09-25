@@ -1,38 +1,38 @@
+//Optimal solution
+//Time Complexity: O(n)
+//space COmplexity: O(1)
+
 class Solution {
-    public int call(int[] nums, int idx, int n, int[] dp){
-        if(idx >= n){
+    public int rec(int i, int[] nums, int[] dp){
+        if(i >= nums.length){
             return 0;
         }
-        if(dp[idx] != -1){
-            return dp[idx];
+        if(dp[i] != -1){
+            return dp[i];
         }
-        int pick = nums[idx] + call(nums, idx + 2, n, dp);
-        int npick = call(nums, idx + 1, n, dp);
-        return dp[idx] = Math.max(pick, npick);
+        int pick = 0, npick = 0;
+        pick = rec(i + 2, nums, dp) + nums[i];
+        npick = rec(i + 1, nums, dp);
+        return dp[i] = Math.max(pick, npick);
     }
     public int rob(int[] nums) {
         int n = nums.length;
         if(n == 1){
             return nums[0];
         }
-        int[] dp = new int[3];
-        //Arrays.fill(dp,-1);  
-        //return call(nums, 0, n, dp);
-        dp[(n - 1) % 3] = nums[n - 1];
-        if(n - 2 >= 0){
-            dp[(n - 2) % 3] = Math.max(nums[n - 2], nums[n - 1]);
+        int[] dp = new int[2];
+        //Arrays.fill(dp, -1);
+        //return Math.max(rec(0, nums, dp), rec(1, nums, dp));
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[1], nums[0]);
+        for(int i = 2; i < n; i++){
+            int pick = dp[(i - 2) % 2] + nums[i];
+            int npick = dp[(i - 1) % 2];
+            dp[i % 2] = Math.max(pick, npick);
         }
-        for(int i = n - 3; i >= 0; i--){
-            int pick = nums[i] + dp[(i + 2) % 3];
-            int npick = dp[(i + 1) % 3];
-            dp[i % 3] = Math.max(pick, npick);
-        }
-        return Math.max(dp[0], dp[1]);
+
+        return dp[(n - 1) % 2];//Math.max(dp[n - 1], dp[n - 2]);
     }
 }
 
 
-
-//Optimal solution
-//Time Complexity: O(n)
-//space COmplexity: O(n)
