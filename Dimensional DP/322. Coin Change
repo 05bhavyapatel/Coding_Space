@@ -1,0 +1,30 @@
+class Solution {
+    public int rec(int[] coins, int amount, int i, int[][] dp) {
+        if (amount == 0) return 0;
+        if (i >= coins.length) return Integer.MAX_VALUE;
+
+        if (dp[i][amount] != -1) return dp[i][amount];
+
+        int pick = Integer.MAX_VALUE;
+        if (amount >= coins[i]) {
+            int res = rec(coins, amount - coins[i], i, dp); // pick same coin
+            if (res != Integer.MAX_VALUE) {
+                pick = 1 + res;
+            }
+        }
+
+        int npick = rec(coins, amount, i + 1, dp); // skip coin
+
+        return dp[i][amount] = Math.min(pick, npick);
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0) return 0;
+
+        int[][] dp = new int[coins.length][amount + 1];
+        for (int[] row : dp) Arrays.fill(row, -1);
+
+        int result = rec(coins, amount, 0, dp);
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+}
