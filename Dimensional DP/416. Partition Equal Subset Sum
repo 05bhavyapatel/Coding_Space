@@ -1,0 +1,64 @@
+//Time Complexity: O(n * sum)
+//Space complexity: O(n * sum)
+
+
+class Solution {
+    public int rec(int i, int sum, int[] nums, int[][] dp){
+        if(sum == 0){
+            return 1;
+        }
+        if(i >= nums.length){
+            return 0;
+        }
+        if(dp[i][sum] != -1){
+            return dp[i][sum];
+        }
+        int pick = 0;
+        if(sum >= nums[i]){
+            pick = rec(i + 1, sum - nums[i], nums, dp);
+        }
+        int npick = rec(i + 1, sum, nums, dp);
+        return dp[i][sum] = (pick == 1)? 1: npick;
+    }
+    public boolean canPartition(int[] nums) {
+    int n = nums.length;
+    int sum = sum(nums);
+
+    // if total sum is odd, cannot partition equally
+    if (sum % 2 != 0) {
+        return false;
+    }
+    int target = sum / 2;
+
+    int[][] dp = new int[n][target + 1];
+
+    // Base case: with 0 sum, it's always possible
+    for (int i = 0; i < n; i++) {
+        dp[i][0] = 1;
+    }
+
+    /
+
+    // Fill dp table
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j <= target; j++) {
+            int notPick = dp[i - 1][j];
+            int pick = 0;
+            if (j >= nums[i]) {
+                pick = dp[i - 1][j - nums[i]];
+            }
+            dp[i][j] = (pick == 1 || notPick == 1) ? 1 : 0;
+        }
+    }
+
+    return dp[n - 1][target] == 1;
+}
+
+public int sum(int[] nums) {
+    int total = 0;
+    for (int i : nums) {
+        total += i;
+    }
+    return total;
+}
+}
