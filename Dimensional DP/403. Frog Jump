@@ -1,0 +1,25 @@
+class Solution {
+    public boolean rec(int[] stones, int i, int lastJump) {
+        int n = stones.length;
+
+        if (i == n - 1) return true;
+
+        for (int next = i + 1; next < n; next++) {
+            int gap = stones[next] - stones[i];
+
+            if (gap >= lastJump - 1 && gap <= lastJump + 1 && gap > 0) {
+                if (rec(stones, next, gap)) return true;
+            }
+
+            if (gap > lastJump + 1) break;
+        }
+
+        return false;
+    }
+
+    public boolean canCross(int[] stones) {
+        
+        if (stones[1] != 1) return false;
+        return rec(stones, 1, 1);
+    }
+}
